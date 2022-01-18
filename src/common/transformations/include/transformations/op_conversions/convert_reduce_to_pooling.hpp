@@ -95,6 +95,11 @@ ngraph::matcher_pass_callback ConvertReduceBase::convert_reduce_to_pooling() {
         }
 
         auto input_shape = input.get_shape();
+        for (size_t i = 0; i < input_shape.size(); ++i) {
+            if (input_shape[i] > 255) {
+                return false;
+            }
+        }
 
         // If Reduce op reduces only 1 dims we replace it with Reshape
         if (std::all_of(axes_vector.begin(), axes_vector.end(),
