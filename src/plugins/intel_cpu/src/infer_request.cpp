@@ -54,6 +54,8 @@ void ov::intel_cpu::MKLDNNInferRequestBase::CreateInferRequest() {
                 state_name = state_name.substr(0, suffix_idx);
 
             memoryStates.emplace_back(new MKLDNNVariableState(state_name, state_store));
+            printf("memory states init %s\n", state_name.c_str());
+            printf("node name %s\n", node->getName().c_str());
         }
     }
 }
@@ -90,6 +92,7 @@ void ov::intel_cpu::MKLDNNInferRequestBase::pushInput(const std::string& inputNa
 }
 
 void ov::intel_cpu::MKLDNNInferRequestBase::PushStates() {
+    printf("ov::intel_cpu::MKLDNNInferRequestBase::PushStates\n");
     for (auto &node : graph->GetNodes()) {
         if (node->getType() == MemoryInput) {
             auto cur_node = dynamic_cast<MKLDNNMemoryInputNode*>(node.get());
@@ -99,9 +102,16 @@ void ov::intel_cpu::MKLDNNInferRequestBase::PushStates() {
             auto cur_id = cur_node->getId();
             for (const auto& state : memoryStates) {
                 if (state->GetName() == cur_id) {
+                    printf("push state name: %s\n", cur_id.c_str());
                     auto cur_state_mem = cur_node->getStore();
                     auto data_ptr = state->GetState()->cbuffer().as<void*>();
                     auto data_size = state->GetState()->byteSize();
+                    // dump data
+                    float* dump_ptr = reinterpret_cast<float*>(data_ptr);
+                    for (int i = 0; i < 4; i++) {
+                        printf("dump push data %f\n", *dump_ptr);
+                        dump_ptr++;
+                    }
                     auto cur_state_mem_buf = static_cast<uint8_t*>(cur_state_mem->GetPtr());
 
                     cpu_memcpy(cur_state_mem_buf, data_ptr, data_size);
@@ -112,6 +122,7 @@ void ov::intel_cpu::MKLDNNInferRequestBase::PushStates() {
 }
 
 void ov::intel_cpu::MKLDNNInferRequestBase::PullStates() {
+    printf("ov::intel_cpu::MKLDNNInferRequestBase::PullStates\n");
     for (auto &node : graph->GetNodes()) {
         if (node->getType() == MemoryInput) {
             auto cur_node = dynamic_cast<MKLDNNMemoryInputNode*>(node.get());
@@ -121,12 +132,20 @@ void ov::intel_cpu::MKLDNNInferRequestBase::PullStates() {
             auto cur_id = cur_node->getId();
             for (const auto& state : memoryStates) {
                 if (state->GetName() == cur_id) {
+                    printf("pull state name: %s\n", cur_id.c_str());
                     auto cur_state_mem = cur_node->getStore();
                     auto data_ptr = state->GetState()->cbuffer().as<void*>();
                     auto data_size = state->GetState()->byteSize();
                     auto cur_state_mem_buf = static_cast<uint8_t*>(cur_state_mem->GetPtr());
 
                     cpu_memcpy(data_ptr, cur_state_mem_buf, data_size);
+
+                    // dump data
+                    float* dump_ptr = reinterpret_cast<float*>(data_ptr);
+                    for (int i = 0; i < 4; i++) {
+                        printf("dump pull data %f\n", *dump_ptr);
+                        dump_ptr++;
+                    }
                 }
             }
         }
@@ -173,7 +192,9 @@ void ov::intel_cpu::MKLDNNInferRequestBase::InferImpl() {
         PushStates();
     }
 
+    printf("infer start check point 1\n");
     graph->Infer(this);
+    printf("infer end check point 1\n");
 
     if (memoryStates.size() != 0) {
         PullStates();
