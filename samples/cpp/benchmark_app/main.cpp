@@ -933,6 +933,31 @@ int main(int argc, char* argv[]) {
 
         inferRequestsQueue.wait_all();
 
+        // Dump input/output data.
+        auto inputTensor0 = inferRequest->get_tensor("input1");
+        auto byteSize = inputTensor0.get_byte_size();
+        printf("input tensor byte size %lu\n", byteSize);
+
+        std::ofstream inputTensorFile0("input_tensor_0.bin", std::ios::out | std::ios::binary);
+        float* inputPtr0 = inputTensor0.data<float>();
+        if (inputTensorFile0.is_open()) {
+            inputTensorFile0.write((char*)inputPtr0, 3200 * 4);
+        }
+        inputTensorFile0.close();
+
+        auto outputTensor0 = inferRequest->get_tensor("inner_h2");
+        byteSize = outputTensor0.get_byte_size();
+        printf("output tensor byte size %lu\n", byteSize);
+
+        std::ofstream outputTensorFile0("output_tensor_0.bin", std::ios::out | std::ios::binary);
+        float* outputPtr0 = outputTensor0.data<float>();
+        if (outputTensorFile0.is_open()) {
+            outputTensorFile0.write((char*)outputPtr0, 768 * 4);
+        }
+        outputTensorFile0.close();
+
+        printf("file-0 dump end\n");
+
         auto duration_ms = inferRequestsQueue.get_latencies()[0];
         slog::info << "First inference took " << double_to_string(duration_ms) << " ms" << slog::endl;
 
@@ -1028,6 +1053,31 @@ int main(int argc, char* argv[]) {
 
         // wait the latest inference executions
         inferRequestsQueue.wait_all();
+
+        // Dump input/output data.
+        auto inputTensor = inferRequest->get_tensor("input1");
+        byteSize = inputTensor.get_byte_size();
+        printf("byte size %lu\n", byteSize);
+
+        std::ofstream inputTensorFile("input_tensor_x.bin", std::ios::out | std::ios::binary);
+        float* inputPtr = inputTensor.data<float>();
+        if (inputTensorFile.is_open()) {
+            inputTensorFile.write((char*)inputPtr, 3200 * 4);
+        }
+        inputTensorFile.close();
+
+        auto outputTensor = inferRequest->get_tensor("inner_h2");
+        byteSize = outputTensor.get_byte_size();
+        printf("output tensor byte size %lu\n", byteSize);
+
+        std::ofstream outputTensorFile("output_tensor_x.bin", std::ios::out | std::ios::binary);
+        float* outputPtr = outputTensor.data<float>();
+        if (outputTensorFile.is_open()) {
+            outputTensorFile.write((char*)outputPtr, 768 * 4);
+        }
+        outputTensorFile.close();
+
+        printf("file-x dump end\n");
 
         LatencyMetrics generalLatency(inferRequestsQueue.get_latencies(), "", FLAGS_latency_percentile);
         std::vector<LatencyMetrics> groupLatencies = {};
