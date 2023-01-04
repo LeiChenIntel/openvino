@@ -22,9 +22,11 @@ op::v3::Assign::Assign(const Output<Node>& new_value, const std::string& variabl
     : AssignBase({new_value}),
       m_variable_id(variable_id) {
     constructor_validate_and_infer_types();
+    printf("op::v3::Assign::Assign\n");
 }
 
 void op::v3::Assign::validate_and_infer_types() {
+    printf("op::v3::Assign::validate_and_infer_types\n");
     NGRAPH_OP_SCOPE(v3_Assign_validate_and_infer_types);
     auto value = input_value(0);
     auto arg_t = get_input_element_type(0);
@@ -65,9 +67,11 @@ op::v6::Assign::Assign(const Output<Node>& new_value, const std::shared_ptr<Vari
     : AssignBase({new_value}) {
     m_variable = variable;
     constructor_validate_and_infer_types();
+    printf("op::v6::Assign::Assign\n");
 }
 
 void op::v6::Assign::validate_and_infer_types() {
+    printf("op::v6::Assign::validate_and_infer_types\n");
     NGRAPH_OP_SCOPE(v6_Assign_validate_and_infer_types);
     m_variable->update({get_input_partial_shape(0), get_input_element_type(0), m_variable->get_info().variable_id});
     std::vector<ov::PartialShape> output_shapes = {ov::PartialShape{}};
@@ -91,6 +95,7 @@ bool op::v6::Assign::visit_attributes(AttributeVisitor& visitor) {
 bool op::v6::Assign::evaluate(const HostTensorVector& outputs,
                               const HostTensorVector& inputs,
                               const EvaluationContext& evaluation_context) const {
+    printf("op::v6::Assign::evaluate\n");
     NGRAPH_OP_SCOPE(v6_Assign_evaluate);
     const auto& found_context = evaluation_context.find("VariableContext");
     NODE_VALIDATION_CHECK(this, found_context != evaluation_context.end(), "VariableContext not found.");

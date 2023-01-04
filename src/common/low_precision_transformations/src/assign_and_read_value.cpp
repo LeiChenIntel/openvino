@@ -20,6 +20,7 @@ NGRAPH_RTTI_DEFINITION(ngraph::pass::low_precision::AssignAndReadValueTransforma
 
 AssignAndReadValueTransformation::AssignAndReadValueTransformation(const std::shared_ptr<ngraph::Function> function, const Params& params) :
     LayerTransformation(params), function(function) {
+    printf("AssignAndReadValueTransformation::AssignAndReadValueTransformation\n");
     auto assign3 = pattern::wrap_type<opset3::Assign>({ pattern::wrap_type<opset1::Multiply>() });
     auto assign6 = pattern::wrap_type<opset6::Assign>({ pattern::wrap_type<opset1::Multiply>() });
 
@@ -49,6 +50,7 @@ AssignAndReadValueTransformation::AssignAndReadValueTransformation(const std::sh
 }
 
 bool AssignAndReadValueTransformation::transform(TransformationContext& context, ngraph::pattern::Matcher& m) {
+    printf("AssignAndReadValueTransformation::transform\n");
     if (!canBeTransformed(context, m.get_match_root())) {
         return false;
     }

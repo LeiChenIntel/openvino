@@ -103,6 +103,14 @@ public:
 
     template<class T_IE, class T_NGRAPH>
     static void Compare(const T_NGRAPH *expected, const T_IE *actual, std::size_t size, float threshold, float abs_threshold = -1.f) {
+        for (std::size_t i = 0; i < 10; ++i) {
+            const T_NGRAPH &ref = expected[i];
+            std::cout << "expected values" << i << " : " << std::to_string(ref) << std::endl;
+        }
+        for (std::size_t i = 0; i < 10; ++i) {
+            const auto &res = actual[i];
+            std::cout << "actual values" << i << " : " << std::to_string(res) << std::endl;
+        }
         for (std::size_t i = 0; i < size; ++i) {
             const T_NGRAPH &ref = expected[i];
             const auto &res = actual[i];

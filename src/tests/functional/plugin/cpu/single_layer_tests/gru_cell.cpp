@@ -93,6 +93,8 @@ protected:
             selectedType = makeSelectedTypeStr(selectedType, netPrecision);
         }
 
+        printf("=======================\n");
+        printf("%d\n", static_cast<int>(netPrecision));
         auto params = ngraph::builder::makeDynamicParams(netPrecision, inputDynamicShapes);
         std::vector<ngraph::Shape> WRB = {{3 * hiddenSize, inputSize}, {3 * hiddenSize, hiddenSize}, {(linearBeforeReset ? 4 : 3) * hiddenSize}};
         auto gruCellOp = ngraph::builder::makeGRU(

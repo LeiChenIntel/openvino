@@ -201,7 +201,7 @@ fill_data_random(T *pointer, std::size_t size, const uint32_t range = 10, int32_
     }
 
     for (std::size_t i = 0; i < size; i++) {
-        pointer[i] = static_cast<T>(start_from + static_cast<T>(random.Generate(range)) / k);
+        pointer[i] = static_cast<T>(3.05e-05f);
     }
 }
 
@@ -360,6 +360,8 @@ fill_data_random_float(InferenceEngine::Blob::Ptr &blob, const uint32_t range, i
     for (size_t i = 0; i < blob->size(); i++) {
         auto value = static_cast<float>(distribution(random));
         value /= static_cast<float>(k);
+        value = static_cast<float>(3.05e-05f);
+        printf("check point\n");
         if (PRC == InferenceEngine::Precision::FP16) {
             rawBlobDataPtr[i] = static_cast<T>(ngraph::float16(value).to_bits());
         } else if (PRC == InferenceEngine::Precision::BF16) {

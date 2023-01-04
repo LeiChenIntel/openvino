@@ -53,6 +53,8 @@ void GRUCellTest::SetUp() {
     InferenceEngine::Precision netPrecision;
     std::tie(should_decompose, batch, hidden_size, input_size, activations, clip, linear_before_reset,
             netPrecision, targetDevice) = this->GetParam();
+    inPrc = netPrecision;
+    outPrc = netPrecision;
 
     std::vector<std::vector<size_t>> inputShapes = {
             {{batch, input_size}, {batch, hidden_size}, {3 * hidden_size, input_size},
@@ -60,6 +62,9 @@ void GRUCellTest::SetUp() {
     };
 
     auto ngPrc = FuncTestUtils::PrecisionUtils::convertIE2nGraphPrc(netPrecision);
+    printf("=======================\n");
+    ::ngraph::element::Type a = ngPrc;
+    printf("%s\n", a.get_type_name().c_str());
     auto params = ngraph::builder::makeParams(ngPrc, {inputShapes[0], inputShapes[1]});
     std::vector<ngraph::Shape> WRB = {inputShapes[2], inputShapes[3], inputShapes[4]};
     auto gru_cell = ngraph::builder::makeGRU(

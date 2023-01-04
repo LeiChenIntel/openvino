@@ -20,9 +20,11 @@ op::v3::ReadValue::ReadValue(const Output<Node>& init_value, const std::string& 
     : ReadValueBase({init_value}),
       m_variable_id(variable_id) {
     constructor_validate_and_infer_types();
+    printf("op::v3::ReadValue::ReadValue\n");
 }
 
 void op::v3::ReadValue::validate_and_infer_types() {
+    printf("op::v3::ReadValue::validate_and_infer_types\n");
     NGRAPH_OP_SCOPE(v3_ReadValue_validate_and_infer_types);
     auto arg_t = get_input_element_type(0);
     auto input_shape = get_input_partial_shape(0);
@@ -56,9 +58,11 @@ op::v6::ReadValue::ReadValue(const Output<Node>& init_value, const shared_ptr<Va
     : ReadValueBase({init_value}) {
     m_variable = variable;
     constructor_validate_and_infer_types();
+    printf("op::v6::ReadValue::ReadValue\n");
 }
 
 void op::v6::ReadValue::validate_and_infer_types() {
+    printf("op::v6::ReadValue::validate_and_infer_types\n");
     NGRAPH_OP_SCOPE(v6_ReadValue_validate_and_infer_types);
     const auto arg_t = get_input_element_type(0);
     auto input_shape = get_input_partial_shape(0);
@@ -99,6 +103,7 @@ void op::v6::ReadValue::revalidate_and_infer_types() {
 bool op::v6::ReadValue::evaluate(const HostTensorVector& outputs,
                                  const HostTensorVector& inputs,
                                  const EvaluationContext& evaluation_context) const {
+    printf("op::v6::ReadValue::evaluate\n");
     NGRAPH_OP_SCOPE(v6_ReadValue_evaluate);
     const auto& found_context = evaluation_context.find("VariableContext");
     NODE_VALIDATION_CHECK(this, found_context != evaluation_context.end(), "VariableContext not found.");
