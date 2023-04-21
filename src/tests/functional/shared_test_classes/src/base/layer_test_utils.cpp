@@ -432,6 +432,7 @@ std::vector<std::pair<ngraph::element::Type, std::vector<std::uint8_t>>> LayerTe
         std::copy(buffer, buffer + inputSize, referenceInput.data());
 
         refInputsTypes[i] = FuncTestUtils::PrecisionUtils::convertIE2nGraphPrc(memory->getTensorDesc().getPrecision());
+        printf("refInputsTypes[i] %d\n", refInputsTypes[i]);
     }
 
     const auto &&outputsInfo = executableNetwork.GetOutputsInfo();
@@ -447,6 +448,7 @@ std::vector<std::pair<ngraph::element::Type, std::vector<std::uint8_t>>> LayerTe
     switch (refMode) {
         case INTERPRETER: {
             expectedOutputs = ngraph::helpers::interpreterFunction(functionRefs, referenceInputs, refInputsTypes);
+            printf("INTERPRETER:\n");
             break;
         }
         case CONSTANT_FOLDING: {

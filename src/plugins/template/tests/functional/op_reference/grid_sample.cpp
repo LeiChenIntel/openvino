@@ -49,6 +49,8 @@ private:
                                                  const op::v9::GridSample::Attributes& attributes) {
         const auto in1 = std::make_shared<op::v0::Parameter>(data.type, data.shape);
         const auto in2 = std::make_shared<op::v0::Parameter>(grid.type, grid.shape);
+        printf("data type %d\n", data.type);
+        printf("grid type %d\n", grid.type);
         const auto grid_sample = std::make_shared<op::v9::GridSample>(in1, in2, attributes);
         return std::make_shared<Model>(NodeVector{grid_sample}, ParameterVector{in1, in2});
     }

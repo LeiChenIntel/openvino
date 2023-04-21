@@ -225,6 +225,7 @@ void grid_sample(DATA_ET* output,
                  const bool align_corners,
                  const ov::op::v9::GridSample::InterpolationMode interpolation_mode,
                  const ov::op::v9::GridSample::PaddingMode padding_mode) {
+    printf("reference grid sample\n");
     assert(data_shape.size() == 4 && grid_shape.size() == 4);
     assert(data_shape[0] == grid_shape[0] && grid_shape[3] == 2);
 

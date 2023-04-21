@@ -91,6 +91,7 @@ void GridSample::initSupportedPrimitiveDescriptors() {
     dataPrecision = getOriginalInputPrecisionAtPort(IN_DATA);
     if (dataPrecision != Precision::I32) {
         dataPrecision = Precision::FP32;
+        printf("data changed\n");
     }
     dataTypeSize = dataPrecision.size();
     gridTypeSize = gridPrecision.size();

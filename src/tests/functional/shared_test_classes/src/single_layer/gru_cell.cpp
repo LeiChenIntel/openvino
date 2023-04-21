@@ -53,6 +53,8 @@ void GRUCellTest::SetUp() {
     InferenceEngine::Precision netPrecision;
     std::tie(should_decompose, batch, hidden_size, input_size, activations, clip, linear_before_reset,
             netPrecision, targetDevice) = this->GetParam();
+    inPrc = netPrecision;
+    outPrc = netPrecision;
 
     std::vector<std::vector<size_t>> inputShapes = {
             {{batch, input_size}, {batch, hidden_size}, {3 * hidden_size, input_size},
