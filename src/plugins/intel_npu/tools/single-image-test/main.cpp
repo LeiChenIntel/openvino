@@ -765,6 +765,8 @@ void loadBinary(const std::string& filePath, const BatchIndexer &fileSourceInBat
     const size_t fileBytes = static_cast<size_t>(fileSize);
     const size_t reqTensorBytes = static_cast<size_t>(requestedTensor.get_byte_size());
 
+    std::cout << "dataPrecision: " << dataPrecision << std::endl;
+    std::cout << "modelPrecision: " << modelPrecision << std::endl;
     if (dataPrecision != modelPrecision && dataPrecision != ov::element::Type_t::dynamic) {
         std::cout << "Converting " << filePath << " input from " << dataPrecision << " to " << modelPrecision
                   << std::endl;
@@ -2418,6 +2420,7 @@ static int runSingleImageTest() {
 //
 
 int main(int argc, char* argv[]) {
+    std::cout << "SIT start" << std::endl;
     parseCommandLine(argc, argv);
 
     return runSingleImageTest();
